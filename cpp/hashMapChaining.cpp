@@ -56,7 +56,7 @@ class HashMap {
 			while(temp->nextLink) {
 				Link* next = temp->nextLink;
 				if (next->key == key) {
-					cout << next->value;
+					cout << next->value << endl;
 					return;
 				}
 				temp = temp->nextLink;
@@ -67,7 +67,35 @@ class HashMap {
 		return;
 	}
 	void remove(string key) {
-		
+		int index = hashFunc(key, 10);
+		Link* tableValue = table[index];
+		if (tableValue != nullptr) {
+			if (tableValue->key == key) {
+				delete tableValue;
+				table[index] = nullptr;
+				return;
+			}
+			Link* temp = tableValue;
+			Link* prevTemp = tableValue;
+				Link* next = temp->nextLink;
+			while(temp->nextLink) {
+				if (next->key == key) {
+					cout << "deleting: " << "{" << next->key << ": " << next->value << "}" << endl;
+					if (next->nextLink) {
+						prevTemp->nextLink = next->nextLink;
+						delete next;
+						return;
+					}
+					prevTemp->nextLink = nullptr;
+					delete next;
+					return;
+				}
+				prevTemp = temp;
+				temp = next;
+			}
+		}
+		cout << "No key associated with you hash map found" << endl;
+		return;
 	}
 	void print() {
 		string tab = " ";
@@ -99,5 +127,7 @@ int main() {
 	myNewMap.insert("Joseph", 18);
 	myNewMap.print();
 	myNewMap.search("Joey");
+	myNewMap.remove("Billy");
+	myNewMap.print();
 	return 0;
 }
