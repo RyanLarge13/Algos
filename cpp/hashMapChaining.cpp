@@ -7,22 +7,22 @@ struct Link {
 	string key;
 	int value;
 	// Initialize the struct via constructor
-	Link(Link* next, string k, int val): nextLink(nullptr),
-	key(k),
-	value(val) {}
+	Link(Link* next, string k, int val) : nextLink(nullptr),
+		key(k),
+		value(val) {}
 };
 
 class HashMap {
-	private:
+private:
 	static const int size = 1000;
-	Link* table[size] {
+	Link* table[size]{
 		nullptr
 	};
 	int hashFunc(string key, int length) {
 		int hash = key.length() % length;
 		return hash;
 	}
-	public:
+public:
 	void insert(string key, int value) {
 		int hashIndex = hashFunc(key, size);
 		Link* newLink = new Link(nullptr, key, value);
@@ -32,7 +32,7 @@ class HashMap {
 				temp->nextLink = newLink;
 				return;
 			}
-			while(temp->nextLink) {
+			while (temp->nextLink) {
 				if (temp->nextLink->nextLink == nullptr) {
 					temp->nextLink->nextLink = newLink;
 					return;
@@ -45,7 +45,7 @@ class HashMap {
 		return;
 	}
 	void search(string key) {
-		int index = hashFunc(key, 10);
+		int index = hashFunc(key, 1000);
 		Link* tableValue = table[index];
 		if (tableValue != nullptr) {
 			if (tableValue->key == key) {
@@ -53,59 +53,57 @@ class HashMap {
 				return;
 			}
 			Link* temp = tableValue;
-			while(temp->nextLink) {
+			while (temp->nextLink) {
 				Link* next = temp->nextLink;
 				if (next->key == key) {
-					cout << next->value << endl;
+					cout << "found: { " << next->key << ": " << next->value << " }" << endl;
 					return;
 				}
 				temp = temp->nextLink;
 			}
 			return;
 		}
-		cout << "No value at this index";
+		cout << "No value related to that key was found in the hash map" << endl;
 		return;
 	}
 	void remove(string key) {
-		int index = hashFunc(key, 10);
+		int index = hashFunc(key, 1000);
 		Link* tableValue = table[index];
 		if (tableValue != nullptr) {
 			if (tableValue->key == key) {
+				cout << "deleting: " << "{ " << tableValue->key << ": " << tableValue->value << " }" << endl;
+				table[index] = tableValue->nextLink;
 				delete tableValue;
-				table[index] = nullptr;
 				return;
 			}
+			Link* prevTemp;
 			Link* temp = tableValue;
-			Link* prevTemp = tableValue;
-				Link* next = temp->nextLink;
-			while(temp->nextLink) {
-				if (next->key == key) {
-					cout << "deleting: " << "{" << next->key << ": " << next->value << "}" << endl;
-					if (next->nextLink) {
-						prevTemp->nextLink = next->nextLink;
-						delete next;
-						return;
+			while (temp) {
+				if (temp->key == key) {
+					cout << "deleting: " << "{ " << temp->key << ": " << temp->value << " }" << endl;
+					if (prevTemp) {
+						prevTemp->nextLink = temp->nextLink;
 					}
-					prevTemp->nextLink = nullptr;
-					delete next;
+					delete temp;
 					return;
 				}
 				prevTemp = temp;
-				temp = next;
+				temp = temp->nextLink;
 			}
+			return;
 		}
-		cout << "No key associated with you hash map found" << endl;
+		cout << "No key associated with the hash map was found" << endl;
 		return;
 	}
 	void print() {
 		string tab = " ";
 		cout << "{" << endl;
-		for (Link* link: table) {
+		for (Link* link : table) {
 			if (link != nullptr) {
 				cout << tab << link->key << ": " << link->value << endl;
 				if (link->nextLink != nullptr) {
 					Link* temp = link;
-					while(temp->nextLink) {
+					while (temp->nextLink) {
 						Link* currentLink = temp->nextLink;
 						cout << tab << currentLink->key << ": " << currentLink->value << endl;
 						temp = currentLink;
@@ -127,7 +125,9 @@ int main() {
 	myNewMap.insert("Joseph", 18);
 	myNewMap.print();
 	myNewMap.search("Joey");
-	myNewMap.remove("Billy");
+	myNewMap.search("Search a non-existent value");
+	myNewMap.remove("Ryan");
+	myNewMap.remove("Remove non-existent value");
 	myNewMap.print();
 	return 0;
 }
