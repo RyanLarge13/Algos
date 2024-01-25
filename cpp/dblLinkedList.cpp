@@ -93,7 +93,31 @@ class DoubleyLinkedList {
 		temp->prevLink = newLink;
 		return;
 	}
-	void remove() {}
+	void removeValue(int value) {
+		if (!head) {
+			cout << "Your list is empty" << endl;
+			return;
+		}
+		if (!head->nextLink) {
+			cout << "No value in this list matching your number is available to delete" << endl;
+			return;
+		}
+		DblLink* temp = head->nextLink;
+		while (temp != head) {
+			if (temp->value == value) {
+				DblLink* next = temp->nextLink;
+				DblLink* prev = temp->prevLink;
+				next->prevLink = prev;
+				prev->nextLink = next;
+				cout << "Removing value: " << temp->value << endl;
+				delete temp;
+				return;
+			}
+			temp = temp->nextLink;
+		}
+		cout << "No value in this list matching your number is available to delete" << endl;
+		return;
+	}
 };
 
 int main() {
@@ -107,6 +131,8 @@ int main() {
 	dblList.insert(7);
 	dblList.print();
 	cout << endl << endl;
+	dblList.printReverse();
+	dblList.removeValue(8);
 	dblList.printReverse();
 	return 0;
 }
