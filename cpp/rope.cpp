@@ -30,9 +30,10 @@ class Rope {
         RopeNode* findLeaf(RopeNode* node) {
             RopeNode* left = node->left;
             RopeNode* right = node->right;
-            string value;
+            string value node->value;
             if (value.length() > 50) {
-                
+                findLeaf(left);
+                findLeaf(right);
             }
             return node;
         }
@@ -48,12 +49,18 @@ class Rope {
         }
 
         void insert(string value, int position) {
-            RopeNode* leafToConcatenate = findLeaf(mainRoot);
+            RopeNode* leafToAppendTo = findLeaf(mainRoot);
+            string currentLeafValue = leafToAppendTo->value;
+            currentLeafValue += value;
         }
 };
 
 int main() {
     Rope myRope;
+    cout << "Before insert" << endl << "********" << endl;
     myRope.printDocument();
+    myRope.insert(" This is a test string");
+    cout << "After insert" << endl << "********" << endl;
+    myRope.printDocument()
     return 0;
 }
