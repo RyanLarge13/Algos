@@ -11,29 +11,28 @@ struct RopeNode {
 };
 
 class Rope {
-    private: 
-         RopeNode* mainRoot = new RopeNode(nullptr, nullptr, nullptr, "New document");
-    public: 
-        void printDocument() {
-            RopeNode* temp = mainRoot;
-            while(temp) {
-                cout << temp->value;
-            }
-            return;
+    private:
+    
+    void print(RodeNode* rope) {
+        RopeNode* left = rope->left;
+        RopeNode* right = rope->right;
+        cout << rope->value;
+        while(left && right) {
+            print(right);
+            print(left);
         }
-        void insert() {
+    }
 
-        }
-        void remove() {
-
-        }
-        void replace() {
-
-        }
+    RopeNode mainRoot = new RopeNode(nullptr, nullptr, nullptr, "New document");
+    public:
+    
+    void printDocument() {
+        RopeNode* temp = mainRoot;
+          
+    }
 };
 
 int main() {
     Rope myRope;
-    myRope.printDocument();
     return 0;
 }
