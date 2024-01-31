@@ -18,11 +18,21 @@ private:
     void print(Node* node) {
         Node* left = node->left;
         Node* right = node->right;
-        cout << node->value << endl;
+        Node* parent = node->parent;
+        cout << node->value << ", parent val: ";
+        if (parent) {
+            cout << parent->value;
+            if (parent->parent) {
+                Node* parentParent = parent->parent;
+                cout << " I also have a parent with val: " << parentParent->value;
+            }
+        }
         if (left != nullptr) {
+            cout << " (there is a left)" << endl;
             print(left);
         }
         if (right != nullptr) {
+            cout << " (there is a right)" << endl;
             print(right);
         }
     }
@@ -31,10 +41,13 @@ private:
         Node* left = node->left;
         Node* right = node->right;
         Node* newNode = new Node(node, nullptr, nullptr, value);
+        cout << "Value: " << value << ", Node value: " << node->value << ", New Node Value: " << newNode->value;
         if (value == node->value) {
+            cout << " (Exactly equals)" << endl << endl;
             return;
         }
         if (!left && !right) {
+            cout << " (No left, no right)" << endl << endl;
             if (value < node->value) {
                 node->left = newNode;
                 return;
@@ -43,21 +56,24 @@ private:
             return;
         }
         if (value < node->value) {
-            if (node->left) {
+            cout << " (Value less than)" << endl << endl;
+            if (node->left != nullptr) {
                 delete newNode;
-                insert(node->left, value);
+                insert(left, value);
             }
             node->left = newNode;
             return;
         }
         if (value > node->value) {
-            if (node->right) {
+            cout << " (Value greater than)" << endl << endl;
+            if (node->right != nullptr) {
                 delete newNode;
-                insert(node->right, value);
+                insert(right, value);
             }
             node->right = newNode;
             return;
         }
+        return;
     }
 
 public:
@@ -82,7 +98,7 @@ int main() {
     BinaryTree myTree;
     myTree.insertValue(50);
     myTree.insertValue(20);
-    // myTree.insertValue(10);
+    myTree.insertValue(10);
     myTree.printValues();
     return 0;
 }
