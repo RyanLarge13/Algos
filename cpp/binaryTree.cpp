@@ -19,20 +19,11 @@ private:
         Node* left = node->left;
         Node* right = node->right;
         Node* parent = node->parent;
-        cout << node->value << ", parent val: ";
-        if (parent) {
-            cout << parent->value;
-            if (parent->parent) {
-                Node* parentParent = parent->parent;
-                cout << " I also have a parent with val: " << parentParent->value;
-            }
-        }
+        cout << node->value << endl;
         if (left != nullptr) {
-            cout << " (there is a left)" << endl;
             print(left);
         }
         if (right != nullptr) {
-            cout << " (there is a right)" << endl;
             print(right);
         }
     }
@@ -60,6 +51,7 @@ private:
             if (node->left != nullptr) {
                 delete newNode;
                 insert(left, value);
+                return;
             }
             node->left = newNode;
             return;
@@ -69,6 +61,7 @@ private:
             if (node->right != nullptr) {
                 delete newNode;
                 insert(right, value);
+                return;
             }
             node->right = newNode;
             return;
