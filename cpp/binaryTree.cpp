@@ -1,5 +1,10 @@
 #include <iostream>
+#include <random>
+#include <cmath>
+#include <chrono>
 using namespace std;
+
+int len = 0;
 
 struct Node {
     Node* parent;
@@ -20,6 +25,7 @@ private:
         Node* right = node->right;
         Node* parent = node->parent;
         cout << node->value << endl;
+        len++;
         if (left != nullptr) {
             print(left);
         }
@@ -32,13 +38,10 @@ private:
         Node* left = node->left;
         Node* right = node->right;
         Node* newNode = new Node(node, nullptr, nullptr, value);
-        cout << "Value: " << value << ", Node value: " << node->value << ", New Node Value: " << newNode->value;
         if (value == node->value) {
-            cout << " (Exactly equals)" << endl << endl;
             return;
         }
         if (!left && !right) {
-            cout << " (No left, no right)" << endl << endl;
             if (value < node->value) {
                 node->left = newNode;
                 return;
@@ -47,7 +50,6 @@ private:
             return;
         }
         if (value < node->value) {
-            cout << " (Value less than)" << endl << endl;
             if (node->left != nullptr) {
                 delete newNode;
                 insert(left, value);
@@ -57,7 +59,6 @@ private:
             return;
         }
         if (value > node->value) {
-            cout << " (Value greater than)" << endl << endl;
             if (node->right != nullptr) {
                 delete newNode;
                 insert(right, value);
@@ -89,9 +90,21 @@ public:
 
 int main() {
     BinaryTree myTree;
-    myTree.insertValue(50);
-    myTree.insertValue(20);
-    myTree.insertValue(10);
-    myTree.printValues();
+    for (int i = 0; i < 10000; i++) {
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<int> distribution(1, 10000);
+        int randomNumber = distribution(gen);
+        myTree.insertValue(randomNumber);
+    }
+    auto start = chrono::high_resolution_clock::now();
+    // myTree.printValues();
+    // for (int i = 0; i < 6350; i++) {
+    //     cout << i << endl;
+    //     len++;
+    // }
+    auto end = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast <chrono::microseconds> (end - start);
+    cout << "Print runtime   " << duration.count() << ", items total: " << len << endl;
     return 0;
 }
