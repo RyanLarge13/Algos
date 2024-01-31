@@ -2,65 +2,78 @@
 using namespace std;
 
 struct RopeNode {
-    RopeNode* left;
-    RopeNode* right;
-    RopeNode* parent;
-    string value;
+	RopeNode* left;
+	RopeNode* right;
+	RopeNode* parent;
+	string value;
 
-    RopeNode(RopeNode* parent, RopeNode* left, RopeNode* right, string val): parent(parent), left(left), right(right), value(val) {} 
+	RopeNode(RopeNode* parent, RopeNode* left, RopeNode* right, string val): parent(parent),
+	left(left),
+	right(right),
+	value(val) {}
 };
 
 class Rope {
-    private:
+	private:
 
-        RopeNode mainRoot = new RopeNode(nullptr, nullptr, nullptr, "New document");
+	RopeNode* mainRoot = new RopeNode(nullptr, nullptr, nullptr, "New document");
 
-        void print(RodeNode* rope) {
-            RopeNode* left = rope->left;
-            RopeNode* right = rope->right;
-            cout << rope->value;
-            if (left) {
-                print(left);
-            }
-            if (right) {
-                print(right);
-            }
-        }
+	RopeNode* leafToAppendTo = findLeaf(mainRoot);
 
-        RopeNode* findLeaf(RopeNode* node) {
-            RopeNode* left = node->left;
-            RopeNode* right = node->right;
-            string value node->value;
-            if (value.length() > 50) {
-                findLeaf(left);
-                findLeaf(right);
-            }
-            return node;
-        }
+	void print(RopeNode* rope) {
+		RopeNode* left = rope->left;
+		RopeNode* right = rope->right;
+		cout << rope->value;
+		if (left) {
+			print(left);
+		}
+		if (right) {
+			print(right);
+		}
+	}
 
-    public:
-    
-        void printDocument() {
-            printDocument(mainRoot);
-        }
+	RopeNode* findLeaf(RopeNode* node) {
+		RopeNode* left = node->left;
+		RopeNode* right = node->right;
+		RopeNode* parent = node->parent;
+		string value = node->value;
+		if (value.length() > 50) {
+			if (!left && !right) {
+				node->left = new RopeNode(node, nullptr, nullptr, value);
+				leafToAppendTo = node->left;
+			}
+			if (!left) {
+				return findLeaf(right);
+			}
+			return findLeaf(left);
+		}
+		return node;
+	}
 
-        void printSection(RopeNode* leaf) {
-            print(leaf);
-        }
+	public:
 
-        void insert(string value, int position) {
-            RopeNode* leafToAppendTo = findLeaf(mainRoot);
-            string currentLeafValue = leafToAppendTo->value;
-            currentLeafValue += value;
-        }
+	void printDocument() {
+		print(mainRoot);
+	}
+
+	void printSection(RopeNode* leaf) {
+		print(leaf);
+	}
+
+	void insert(string value) {
+		leafToAppendTo->value += value;
+	}
 };
 
 int main() {
-    Rope myRope;
-    cout << "Before insert" << endl << "********" << endl;
-    myRope.printDocument();
-    myRope.insert(" This is a test string");
-    cout << "After insert" << endl << "********" << endl;
-    myRope.printDocument()
-    return 0;
+	Rope myRope;
+	cout << "Before insert" << endl << "********" << endl;
+	myRope.printDocument();
+	myRope.insert(" This is a test string");
+	myRope.insert(" I need to better understand how Ropes work to know how to program this data structure.");
+	myRope.insert(" To be perfectly honest, I think I am a bit stuck here. It's because I need to read up on this and do some good lessons on rope data structures.");
+	cout << endl << endl << "After insert" << endl << "********" << endl;
+	myRope.printDocument();
+	cout << endl;
+	return 0;
 }
