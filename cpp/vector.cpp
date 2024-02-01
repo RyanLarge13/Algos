@@ -21,7 +21,11 @@ class Vector {
       cout << "Your vect is empty" << endl;
     }
     cout << '[';
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < vec->size; i++) {
+      if (i == length - 1) {
+        cout << vec->myArr[i];
+        break;
+      }
       cout << vec->myArr[i] << ", ";
     }
     cout << ']' << endl;
@@ -47,6 +51,7 @@ class Vector {
       tracker++;
     }
     for (int num: nums) {
+      cout << num;
       newArr[tracker] = num;
       tracker++;
     }
