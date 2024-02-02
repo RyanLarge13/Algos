@@ -69,7 +69,10 @@ public:
   }
   void pop() {}
   void shift() {}
-  void find() {}
+  void find(int index) {
+    int* myArray = vec->myArr;
+    cout << myArray[index] << endl;
+  }
 };
 
 int main() {
@@ -78,9 +81,11 @@ int main() {
     1,
     3,
     4,
-    5
+    5,
+    473
     });
   myVect.push({ 5,4,6,7,4,6,5,4,3,6,4,5,7,4,3,2,5,4,4,4,4,4,4 });
+  myVect.find(4); // should print 473
   myVect.print();
   return 0;
 }
