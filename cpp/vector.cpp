@@ -5,28 +5,30 @@ using namespace std;
 struct Vect {
   size_t size;
   int* myArr;
-  Vect(size_t size): size(size),
-  myArr(new int[size]) {}
+  Vect(size_t size) : size(size),
+    myArr(new int[size]) {}
 };
 
 class Vector {
-  private:
-  size_t defaultSize = 0;
+private:
+  size_t defaultSize = 10;
   Vect* vec = new Vect(defaultSize);
-  size_t length = 0;
-  public:
+  size_t length = 10;
+  size_t values = 0;
+public:
 
   void print() {
     if (length == 0) {
       cout << "Your vect is empty" << endl;
     }
     cout << '[';
-    for (int i = 0; i < vec->size; i++) {
-      if (i == length - 1) {
-        cout << vec->myArr[i];
+    for (int i = 0; i < values - 1; i++) {
+      int* val = vec->myArr;
+      if (i == values - 2) {
+        cout << val[i];
         break;
       }
-      cout << vec->myArr[i] << ", ";
+      cout << val[i] << ", ";
     }
     cout << ']' << endl;
   }
@@ -37,23 +39,31 @@ class Vector {
       cout << "Pass in at least 1 value" << endl;
       return;
     }
-    if (numsSize >= length) {
-      length = (length == 0 ? 1: length *= 2);
-      delete vec;
-      vec = new Vect(length);
-      push(nums);
-      return;
+    if (values + numsSize >= length) {
+      length = max(length * 2, values + numsSize);
+      int* newArr = new int[length];
+      int* val = vec->myArr;
+      int tracker = 0;
+      for (int i = 0; i <= values; i++) {
+        newArr[i] = *val;
+        val++;
+        tracker++;
+      }
+      values = tracker;
+      for (int num : nums) {
+        newArr[tracker - 1] = num;
+        tracker++;
+        values++;
+      }
+      delete[] vec->myArr;
+      vec->myArr = newArr;
     }
-    int newArr[length + numsSize];
-    int tracker = 0;
-    for (int i = 0; i < length; i++) {
-      newArr[i] = vec->myArr[i];
-      tracker++;
-    }
-    for (int num: nums) {
-      cout << num;
-      newArr[tracker] = num;
-      tracker++;
+    else {
+      int* val = vec->myArr;
+      for (int num : nums) {
+        val[values] = num;
+        values++;
+      }
     }
     return;
   }
@@ -64,10 +74,13 @@ class Vector {
 
 int main() {
   Vector myVect;
-  myVect.print();
   myVect.push({
-    1, 2, 3, 4
-  });
+    1,
+    3,
+    4,
+    5
+    });
+  myVect.push({ 5,4,6,7,4,6,5,4,3,6,4,5,7,4,3,2,5,4,4,4,4,4,4 });
   myVect.print();
   return 0;
 }

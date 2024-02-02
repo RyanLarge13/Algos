@@ -7,14 +7,14 @@ struct RopeNode {
 	RopeNode* parent;
 	string value;
 
-	RopeNode(RopeNode* parent, RopeNode* left, RopeNode* right, string val): parent(parent),
-	left(left),
-	right(right),
-	value(val) {}
+	RopeNode(RopeNode* parent, RopeNode* left, RopeNode* right, string val) : parent(parent),
+		left(left),
+		right(right),
+		value(val) {}
 };
 
 class Rope {
-	private:
+private:
 
 	RopeNode* mainRoot = new RopeNode(nullptr, nullptr, nullptr, "New document");
 
@@ -50,17 +50,22 @@ class Rope {
 		return node;
 	}
 
-	public:
+public:
 
 	void printDocument() {
 		print(mainRoot);
 	}
 
 	void printSection(RopeNode* leaf) {
-		print(leaf);
+		if (!leaf) {
+			cout << mainRoot->value;
+			return;
+		}
+		cout << leaf->value;
 	}
 
 	void insert(string value) {
+		leafToAppendTo = findLeaf(mainRoot);
 		leafToAppendTo->value += value;
 	}
 };
@@ -75,5 +80,7 @@ int main() {
 	cout << endl << endl << "After insert" << endl << "********" << endl;
 	myRope.printDocument();
 	cout << endl;
+	cout << "Printing only mainroot" << endl;
+	myRope.printSection(nullptr);
 	return 0;
 }
