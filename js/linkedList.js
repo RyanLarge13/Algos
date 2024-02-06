@@ -66,20 +66,30 @@ class LinkedList {
             console.log("Your list is empty, no values exist to remove");
             return;
         }
+        if (index === 0) {
+            const next = this.head.next;
+            this.head.next = next.next;
+            return;
+        }
         let i = 0;
         let currentLink = this.head.next;
-        while (i < index && currentLink) {
-            currentLink = currentLink.next;
+        while (i <= index && currentLink) {
             i++;
+            prevLink = currentLink;
+            currentLink = currentLink.next;
         }
-        if (currentLink.next) {
-            currentLink.next = null;
+        if (currentLink) {
+            prevLink.next = currentLink.next;
             return;
         }
         console.log("No list item at the specified index to delete");
         return;
     }
     print() {
+        if (!this.head || !this.head.next) {
+            console.log("Your list is empty");
+            return;
+        }
         let next = this.head.next;
         while (next) {
             console.log(next.value);
@@ -99,5 +109,6 @@ myList.find(10);
 myList.find(15);
 myList.remove(12);
 myList.remove(100);
+myList.removeAt(0);
 myList.removeAt(0);
 myList.print();
