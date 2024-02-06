@@ -1,6 +1,5 @@
 #include <iostream>
 using namespace std;
-
 struct RopeNode {
 	RopeNode* left;
 	RopeNode* right;
@@ -12,6 +11,7 @@ struct RopeNode {
 		right(right),
 		value(val) {}
 };
+
 
 class Rope {
 private:
