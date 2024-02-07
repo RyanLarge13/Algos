@@ -66,6 +66,32 @@ class Rope {
     }
   }
 
+  void deleteSubstring(RopeNode* node, int startIndex, int length) {
+    if (!node) {
+      return;
+    }
+    if (startIndex >= node->weight) {
+      return;
+    }
+    while (node && startIndex >= node->weight) {
+      startIndex -= node->weight;
+      node = node->right;
+    }
+    if (!node) {
+      return;
+    }
+    if (startIndex + length <= node->weight) {
+      node->value.erase(startIndex, length);
+      node->weight -= length;
+    } else {
+      int charsToDelete = min(length, node->weight - startIndex);
+      node->value.erase(startIndex, charsToDelete);
+      node->weight -= charsToDelete;
+      startIndex = 0;
+      deleteSubstring(node->right, 0, length - charsToDelete);
+    }
+  }
+
   public:
 
   void printDocument() {
@@ -76,17 +102,21 @@ class Rope {
     insertString(mainRoot, value, index);
   }
 
-  void deleteAt(int index) {}
+  void deleteSubstring(int startIndex, int length) {
+    deleteSubstring(mainRoot, startIndex, length);
+  }
 };
 
 int main() {
   Rope myRope;
   myRope.printDocument();
-  myRope.insert(" This doc is short.", 0);
-  myRope.insert(" end-ish", 5);
-  myRope.printDocument();
-  myRope.insert("Begin!", 0);
-  myRope.insert("What the vi!!!", 4);
+  cout << endl;
+  myRope.insert("This doc is short.", 0);
+  myRope.deleteSubstring(0, 5);
+  myRope.deleteSubstring(0, 50);
+  myRope.insert("Hi", 0);
+  myRope.insert(", how are you today?", 2);
+  myRope.deleteSubstring(0, 10);
   myRope.printDocument();
   cout << endl;
   return 0;
