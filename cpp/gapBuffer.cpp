@@ -16,12 +16,14 @@ class GapBuffer {
         gapEnd - offset);
       gapStart = index;
       gapEnd -= offset;
+      indexState = index;
     } else if (index > gapStart) {
       int offset = index - gapStart;
       copy(buffer.begin() + gapEnd, buffer.begin() + gapEnd + offset,
         buffer.begin() + gapStart);
       gapStart += offset;
       gapEnd = index;
+      indexState = index;
     }
   }
 
@@ -44,16 +46,16 @@ class GapBuffer {
     if (gapStart != gapEnd) {
       moveGap(index);
     }
-    buffer[gapStart] = c;
-    gapStart++;
-    indexState++;
     if (gapStart == gapEnd) {
       expandBuffer();
     }
+    buffer[gapStart] = c;
+    gapStart++;
+    indexState++;
   }
 
   void erase(int index) {
-    if (index < 0 || index >= buffer.size()) {
+    if (index <= 0 || index > gapEnd) {
       return;
     }
     if (gapStart != gapEnd) {
@@ -75,13 +77,21 @@ class GapBuffer {
 
   void movePosBack(int amount) {
     indexState -= amount;
+    if (indexState <= 0) {
+      indexState = 0;
+      return;
+    }
   }
 
   void movePosForward(int amount) {
-    if (indexState == buffer.size()) {
+    indexState += amount;
+    if (indexState > buffer.size() - (gapEnd - gapStart)) {
+      indexState = buffer.size() - (gapEnd - gapStart);
+      if (indexState < 0) {
+        indexState = 0;
+      }
       return;
     }
-    indexState += amount;
   }
 
   int getSize() {
@@ -100,23 +110,13 @@ int main() {
   bool editing = true;
   while(editing) {
     char c = getch();
+    cout << c;
     switch (c) {
-      case KEY_LEFT:
-      buff.movePosBack(1);
-      break;
-      case KEY_RIGHT:
-      buff.movePosForward(1);
-      break;
-      case KEY_DC:
-      buff.erase(buff.getCurrentPos());
-      break;
-      case KEY_BACKSPACE:
-      buff.movePosBack(1);
-      buff.erase(buff.getCurrentPos());
-      break;
+      // back btn
       case 127:
       buff.erase(buff.getCurrentPos());
       break;
+      // enter pressed
       case 13:
       buff.insert('\n', buff.getCurrentPos());
       break;
@@ -124,18 +124,15 @@ int main() {
       break;
       case 3:
       break;
+      //left btn
       case 4:
-      if (buff.getCurrentPos() > 0) {
-        buff.movePosBack(1);
-      }
+      buff.movePosBack(1);
+      move(0, buff.getCurrentPos());
       break;
+      // right btn
       case 5:
-      if (buff.getCurrentPos() <= buff.getSize()) {
-        buff.movePosForward(1);
-      }
-      break;
-      case '\n': // Handle newline
-      // Handle newline as needed
+      buff.movePosForward(1);
+      move(0, buff.getCurrentPos());
       break;
       // tab key
       case 9:
@@ -150,7 +147,6 @@ int main() {
     }
     clear();
     printw("%s", buff.print().c_str());
-    move(0, buff.getCurrentPos());
     refresh();
   }
   endwin();
